@@ -1,32 +1,21 @@
 <?php
 
-// Si on doit supporter un nouveau type de format, on doit modifier cette classe :(
-require_once 'Mp3.php';
-require_once 'Ogg.php';
-
 class MusicReader
 {
-    private $filename;
+    // this property is only accessible in this class
+    private $musicType;
 
-    public function __construct($filename)
+    // this concept is named "type declaration"
+    // it means that the parameter must be an instance of the class "MusicType"
+    // this concept is included not only for the direct instance 
+    // but also for all the classes inherited from 'MusicType"
+    public function __construct(MusicType $musicType)
     {
-        $this->filename = $filename;
+        $this->musicType = $musicType;
     }
 
     public function listen()
     {
-        $extension = pathinfo($this->filename, PATHINFO_EXTENSION);
-        switch ($extension) {
-            case 'mp3':
-                $mp3 = new Mp3($this->filename);
-                return $mp3->listen();
-                break;
-            case 'ogg':
-                $ogg = new Ogg($this->filename);
-                return $ogg->listen();
-                break;
-            default:
-                throw new \Exception('Aucun lecteur trouvé pour cette musique');
-        }
+        return $this->musicType->listen();
     }
 }
